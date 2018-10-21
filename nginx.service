@@ -1,0 +1,24 @@
+# /etc/systemd/system/nginx.service
+[Unit]
+Description=The nginx HTTP and reverse proxy server
+After=network.target remote-fs.target nss-lookup.target
+
+[Service]
+LimitNOFILE=1048576
+Restart=on-failure
+##Restart=always ## always restart service
+RestartSec=20
+Type=forking
+PIDFile=/var/run/nginx.pid
+ExecStartPre=/app/nginx/sbin/nginx -t
+ExecStart=/app/nginx/sbin/nginx
+#ExecReload=/bin/kill -USR2 $MAINPID
+ExecReload=/bin/kill -s HUP $MAINPID
+KillMode=process
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+PrivateTmp=true
+
+
+[Install]
+WantedBy=multi-user.target

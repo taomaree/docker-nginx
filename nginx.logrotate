@@ -1,0 +1,33 @@
+/app/logs/nginx/*.log {
+rotate 65
+maxage 65
+daily
+dateyesterday
+dateext
+sharedscripts
+copytruncate
+compress
+notifempty
+missingok
+lastaction
+dir=/app/logrotate/nginx_`date +%Y_%m_%d -d '-1 day'`
+mkdir -p $dir
+mv /app/logs/nginx/*.gz $dir
+find /app/logrotate/nginx_* -mtime +65 -name "*.*" -exec rm -rf {} \;
+service nginx reload
+endscript
+}
+
+/app/logs/spider/*.log {
+rotate 366
+maxage 366
+daily
+copytruncate
+nocompress
+compress
+notifempty
+missingok
+dateext
+sharedscripts
+}
+
